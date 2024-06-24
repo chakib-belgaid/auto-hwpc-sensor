@@ -13,8 +13,9 @@ To install the Auto HWPC Sensor, follow these steps:
 ## Usage
 
 To use the Auto HWPC Sensor, follow these steps:
-1. prepare your config file with all the events except the one that depends on the container/core
-2. 
+1. install the [hwpc-sensor](https://powerapi.org/reference/sensors/hwpc-sensor/)
+2. prepare your config file with all the events except the one that depends on the container/core
+3. 
  instead of running the hwpc-sensor with the config file, run the auto-hwpc-sensor with the config file as an argument
 
 ```bash
