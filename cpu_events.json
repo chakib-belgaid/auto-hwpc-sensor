@@ -17,13 +17,13 @@
         "LLC_MISSES",
         "INSTRUCTIONS_RETIRED"
     ],
-    "Sandy bridge": [
+    "sandy bridge": [
         "CPU_CLK_UNHALTED:REF_P",
         "CPU_CLK_UNHALTED:THREAD_P",
         "LLC_MISSES",
         "INSTRUCTIONS_RETIRED"
     ],
-    "comet Lake": [
+    "comet lake": [
         "CPU_CLK_UNHALTED:REF_P",
         "CPU_CLK_UNHALTED:THREAD_P",
         "LLC_MISSES",
