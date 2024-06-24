@@ -67,5 +67,11 @@ update_config_file() {
     echo "}" >>"$config_file.updated"
 }
 
+if [ ! -f "cpu_events.json" ]; then
+    echo "Warning: cpu_events.json file not found. Downloading the file from the repository."
+
+    curl -O https://raw.githubusercontent.com/chakib-belgaid/auto-hwpc-sensor/main/cpu_events.json >cpu_events.json
+fi
+
 update_config_file $1
 hwpc-sensor --config-file $config_file.updated
