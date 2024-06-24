@@ -1,47 +1,71 @@
 #!/bin/bash
 
-# This script is used to automatically generate the config file for hwpc-sensor based on the CPU model.
+# This script is used to update the configuration file for the hwpc-sensor tool.
+# It retrieves the CPU information and corresponding events from a JSON file,
+# and then updates the configuration file with the retrieved events.
 
-get_events() {
+# Function to get the CPU information by analyzing the logs from hwpc-sensor
+# Arguments: None
+# Returns: The CPU information
+get_cpu() {
     events_file="cpu_events.json"
+    logs=$(hwpc-sensor 2>&1 | tr '[:upper:]' '[:lower:]')
+    cpu_candidates=$(grep -oP '"\K[^"]*(?=":)' $events_file)
 
-    logs=$(hwpc-sensor 2>&1)
-    logs=${logs,,}
-    cpu_model=$(echo "$logs" | tr '[:upper:]' '[:lower:]')
+    while read -r candidate; do
+        if echo "$logs" | grep -q "$candidate"; then
+            echo "$candidate"
+            exit 0
+        fi
+    done <<<"$cpu_candidates"
+    exit 1
+}
+
+# Function to get events for a specific CPU
+# Parameters:
+#   $1: The CPU model
+# Returns:
+#   The events for the specified CPU
+#   Exits with -1 if the CPU model is not found in the events file
+get_events() {
+
+    cpu=$1
+    events_file="cpu_events.json"
     events=$(cat "$events_file")
-    if [[ $events == *"$cpu_model"* ]]; then
-        echo "$events" | awk -v model="$cpu_model" 'BEGIN{RS="]"} $0~model {print "[" substr($0, index($0, "[")+1) "]"; exit}'
+    if [[ $events == *"$cpu"* ]]; then
+        echo "$events" | awk -v model="$cpu" 'BEGIN{RS="]"} $0~model {print "[" substr($0, index($0, "[")+1) "]"; exit}'
     else
+
         exit -1
     fi
 }
 
-events_to_json() {
-    local events=$@
-    echo $events | tr -d '\n' | tr -d ' ' | awk -v RS="," 'BEGIN{print "    \"container\": {\n        \"core\": {\n            \"events\": ["} {if (NR > 1) printf ","; printf "\n                \"" $0 "\""} END { printf "\n            ]\n        }\n    }\n"}'
-}
-
 update_config_file() {
-    events=$(get_events)
+    cpu=$(get_cpu)
+    if [ $? -eq 1 ]; then
+        echo "Error: cpu not found in the events file. Exiting."
+        # Handle the error, for example, exit the script or try a fallback operation
+        exit 1
+    else
+        echo "CPU model found : $cpu"
+    fi
+    events=$(get_events $cpu)
     config_file=$1
 
-    # Create a backup of the config file
-    cp "$config_file" "$config_file.bak"
+    cp "$config_file" "$config_file.updated"
+    sed -i '$ d' "$config_file.updated"
+    sed -i '$ s/$/,/' "$config_file.updated"
 
-    # Remove the last } from the config file
-    sed -i '$ d' "$config_file.bak"
-
-    # Replace the last } with }, in the config file
-    sed -i '$ s/$/,/' "$config_file.bak"
-
-    # Add the events to the config file
-    events_to_json "$events" >>"$config_file.bak"
-
-    # Add the last } to the config file
-    echo "}" >>"$config_file.bak"
-
+    echo '    "container": {' >>"$config_file.updated"
+    echo '        "core": {' >>"$config_file.updated"
+    echo '            "events": ' >>"$config_file.updated"
+    for event in $events; do
+        echo '                '$event >>"$config_file.updated"
+    done
+    echo '        }' >>"$config_file.updated"
+    echo '    }' >>"$config_file.updated"
+    echo "}" >>"$config_file.updated"
 }
 
-get_events
-# update_config_file $1
-# hwpc-sensor --config-file $1.bak
+update_config_file $1
+hwpc-sensor --config-file $config_file.updated
