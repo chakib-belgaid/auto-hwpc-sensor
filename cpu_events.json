@@ -1,0 +1,43 @@
+{
+    "Skylake": [
+        "CPU_CLK_THREAD_UNHALTED:REF_P",
+        "CPU_CLK_THREAD_UNHALTED:THREAD_P",
+        "LLC_MISSES",
+        "INSTRUCTIONS_RETIRED"
+    ],
+    "Whiskey Lake": [
+        "CPU_CLK_THREAD_UNHALTED:REF_P",
+        "CPU_CLK_THREAD_UNHALTED:THREAD_P",
+        "LLC_MISSES",
+        "INSTRUCTIONS_RETIRED"
+    ],
+    "Coffe Lake": [
+        "CPU_CLK_THREAD_UNHALTED:REF_P",
+        "CPU_CLK_THREAD_UNHALTED:THREAD_P",
+        "LLC_MISSES",
+        "INSTRUCTIONS_RETIRED"
+    ],
+    "Sandy Bridge": [
+        "CPU_CLK_UNHALTED:REF_P",
+        "CPU_CLK_UNHALTED:THREAD_P",
+        "LLC_MISSES",
+        "INSTRUCTIONS_RETIRED"
+    ],
+    "Comet Lake": [
+        "CPU_CLK_UNHALTED:REF_P",
+        "CPU_CLK_UNHALTED:THREAD_P",
+        "LLC_MISSES",
+        "INSTRUCTIONS_RETIRED"
+    ],
+    "Broadwell": [
+        "CPU_CLK_UNHALTED:REF_P",
+        "CPU_CLK_UNHALTED:THREAD_P",
+        "LLC_MISSES",
+        "INSTRUCTIONS_RETIRED"
+    ],
+    "AMD": [
+        "CYCLES_NOT_IN_HALT",
+        "RETIRED_INSTRUCTIONS",
+        "RETIRED_UOPS"
+    ]
+}
