@@ -32,6 +32,12 @@ becomes
 
 ## Contributing
 
-Contributions are welcome! If you would like to contribute to the Auto HWPC Sensor project, please follow the guidelines outlined in the [CONTRIBUTING.md](https://github.com/your-username/auto-hwpc-sensor/blob/main/CONTRIBUTING.md) file.
+Contributions are welcome! If you would like to contribute to the Auto HWPC Sensor project. 
+
+To add a new cpu family, follow these steps:
+
+1. add the entry in the file cpu_events.json with the cpu family as the key and the events as the value
+2. make sure the the cpu family is in ** Lower case ** otherwise it won't work 
+3. the events should be the same format as the events present in the [lbpfm4](https://github.com/gfieni/libpfm4)
 
 
